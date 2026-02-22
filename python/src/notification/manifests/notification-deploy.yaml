@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+        - name: notification
+          image: hpnanditha/notification:v11
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: RABBITMQ_HOST
+              value: "rabbitmq"
+
+            # MUST match converter output queue
+            - name: MP3_QUEUE
+              value: "mp3"
+
+            - name: GMAIL_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secret
+                  key: GMAIL_ADDRESS
+
+            - name: GMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secret
+                  key: GMAIL_PASSWORD

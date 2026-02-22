@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: converter
+  labels:
+    app: converter
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: converter
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: converter
+    spec:
+      containers:
+        - name: converter
+          image: hpnanditha/converter:v11
+          imagePullPolicy: IfNotPresent
+          env:
+            # ✅ FIXED Mongo service name
+            - name: MONGO_URI
+              value: "mongodb://mongo:27017/videos"
+
+            # ✅ RabbitMQ connection
+            - name: RABBITMQ_HOST
+              value: "rabbitmq"
+
+            # ✅ Queue name must match gateway
+            - name: QUEUE_NAME
+              value: "video"
+
+          envFrom:
+            - configMapRef:
+                name: converter-configmap
+            - secretRef:
+                name: converter-secret
