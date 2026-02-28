@@ -45,10 +45,10 @@ def init_mongo():
             mongo_mp3_client.admin.command("ping")
             fs_mp3s = gridfs.GridFS(mongo_mp3_client.get_default_database())
 
-            print("✅ MongoDB (videos + mp3db) connected")
+            print("MongoDB (videos + mp3db) connected")
             return
         except Exception as e:
-            print("⏳ Waiting for MongoDB...", e)
+            print("Waiting for MongoDB...", e)
             time.sleep(3)
 
 
@@ -61,10 +61,10 @@ def init_rabbitmq():
             )
             channel = connection.channel()
             channel.queue_declare(queue=QUEUE_NAME, durable=True)
-            print("✅ RabbitMQ connected")
+            print("RabbitMQ connected")
             return
         except Exception as e:
-            print("⏳ Waiting for RabbitMQ...", e)
+            print("Waiting for RabbitMQ...", e)
             time.sleep(3)
 
 
