@@ -24,7 +24,6 @@ def upload(f, fs, channel_unused, access):
     }
 
     try:
-        # 🔥 CREATE NEW CONNECTION PER REQUEST
         connection = pika.BlockingConnection(
             pika.ConnectionParameters(host=RABBITMQ_HOST)
         )
