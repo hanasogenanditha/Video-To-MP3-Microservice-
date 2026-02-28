@@ -30,17 +30,14 @@ def main():
     connection = wait_for_rabbitmq(rabbit_host)
     channel = connection.channel()
 
-    # Make queue durable
     channel.queue_declare(queue=mp3_queue, durable=True)
 
-    # Process one message at a time (important)
     channel.basic_qos(prefetch_count=1)
 
     def callback(ch, method, properties, body):
         print("Received message from MP3 queue")
 
         try:
-            # RabbitMQ sends bytes → decode → parse JSON
             message = json.loads(body.decode())
 
             err = email.notification(message)
