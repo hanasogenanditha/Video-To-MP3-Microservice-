@@ -5,7 +5,6 @@ from email.message import EmailMessage
 
 def notification(message):
     try:
-        # message is already a dict
         mp3_fid = message["mp3_fid"]
         receiver_address = message["username"]
 
