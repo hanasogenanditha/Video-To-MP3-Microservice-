@@ -15,14 +15,12 @@ from storage import util
 
 server = Flask(__name__)
 
-# Environment variables
-MONGO_URI = os.getenv("MONGO_URI")  # mongodb://mongo:27017/videos
+MONGO_URI = os.getenv("MONGO_URI") 
 MP3_MONGO_URI = "mongodb://mongo:27017/mp3db"
 
 RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "rabbitmq")
 QUEUE_NAME = os.getenv("QUEUE_NAME", "video")
 
-# Globals
 mongo_video_client = None
 mongo_mp3_client = None
 fs_videos = None
@@ -35,12 +33,10 @@ def init_mongo():
 
     while True:
         try:
-            # Videos DB
             mongo_video_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=3000)
             mongo_video_client.admin.command("ping")
             fs_videos = gridfs.GridFS(mongo_video_client.get_default_database())
 
-            # MP3 DB
             mongo_mp3_client = MongoClient(MP3_MONGO_URI, serverSelectionTimeoutMS=3000)
             mongo_mp3_client.admin.command("ping")
             fs_mp3s = gridfs.GridFS(mongo_mp3_client.get_default_database())
