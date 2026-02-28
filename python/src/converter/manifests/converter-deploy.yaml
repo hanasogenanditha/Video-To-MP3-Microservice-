@@ -24,15 +24,12 @@ spec:
           image: hpnanditha/converter:v11
           imagePullPolicy: IfNotPresent
           env:
-            # ✅ FIXED Mongo service name
             - name: MONGO_URI
               value: "mongodb://mongo:27017/videos"
 
-            # ✅ RabbitMQ connection
             - name: RABBITMQ_HOST
               value: "rabbitmq"
 
-            # ✅ Queue name must match gateway
             - name: QUEUE_NAME
               value: "video"
 
