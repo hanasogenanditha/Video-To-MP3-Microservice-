@@ -18,7 +18,7 @@ def start(message, fs_videos, fs_mp3s, channel):
         temp_video.write(grid_out.read())
         temp_video.close()
 
-        print("🎬 Video downloaded, starting audio extraction")
+        print("Video downloaded, starting audio extraction")
 
         # Extract audio
         video = VideoFileClip(temp_video_path)
@@ -56,11 +56,11 @@ def start(message, fs_videos, fs_mp3s, channel):
             ),
         )
 
-        print("📤 MP3 message sent to queue")
+        print("MP3 message sent to queue")
         return None
 
     except Exception as e:
-        print("❌ MP3 conversion failed:", e)
+        print("MP3 conversion failed:", e)
         if os.path.exists(temp_video_path):
             os.remove(temp_video_path)
         return "conversion failed"
