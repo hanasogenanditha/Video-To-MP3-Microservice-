@@ -27,9 +27,9 @@ def notification(message):
         session.send_message(msg)
         session.quit()
 
-        print("✅ Mail Sent to", receiver_address)
+        print("Mail Sent to", receiver_address)
         return None
 
     except Exception as err:
-        print("❌ Email failed:", err)
+        print("Email failed:", err)
         return err
