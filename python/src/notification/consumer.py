@@ -12,19 +12,19 @@ def wait_for_rabbitmq(host):
             connection = pika.BlockingConnection(
                 pika.ConnectionParameters(host=host)
             )
-            print("✅ Connected to RabbitMQ")
+            print("Connected to RabbitMQ")
             return connection
         except Exception as e:
-            print("⏳ Waiting for RabbitMQ...", e)
+            print("Waiting for RabbitMQ...", e)
             time.sleep(3)
 
 
 def main():
     rabbit_host = os.getenv("RABBITMQ_HOST", "rabbitmq")
-    mp3_queue = os.getenv("MP3_QUEUE")  # MUST match converter queue name
+    mp3_queue = os.getenv("MP3_QUEUE")  
 
     if not mp3_queue:
-        print("❌ MP3_QUEUE not set")
+        print("MP3_QUEUE not set")
         sys.exit(1)
 
     connection = wait_for_rabbitmq(rabbit_host)
@@ -37,7 +37,7 @@ def main():
     channel.basic_qos(prefetch_count=1)
 
     def callback(ch, method, properties, body):
-        print("📩 Received message from MP3 queue")
+        print("Received message from MP3 queue")
 
         try:
             # RabbitMQ sends bytes → decode → parse JSON
@@ -46,19 +46,19 @@ def main():
             err = email.notification(message)
 
             if err:
-                print("❌ Email failed, requeueing:", err)
+                print("Email failed, requeueing:", err)
                 ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
             else:
-                print("✅ Email sent successfully")
+                print("Email sent successfully")
                 ch.basic_ack(delivery_tag=method.delivery_tag)
 
         except Exception as e:
-            print("❌ Processing crashed:", e)
+            print("Processing crashed:", e)
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
 
     channel.basic_consume(queue=mp3_queue, on_message_callback=callback)
 
-    print("📨 Notification service waiting for messages...")
+    print("Notification service waiting for messages...")
     channel.start_consuming()
 
 
