@@ -28,7 +28,6 @@ spec:
             - secretRef:
                 name: gateway-secret
 
-          # 🔑 These prevent CrashLoopBackOff while services warm up
           readinessProbe:
             httpGet:
               path: /health
