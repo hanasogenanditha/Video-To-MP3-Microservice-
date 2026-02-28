@@ -13,14 +13,12 @@ def start(message, fs_videos, fs_mp3s, channel):
     temp_video_path = temp_video.name
 
     try:
-        # Download video from GridFS
         grid_out = fs_videos.get(ObjectId(message["video_fid"]))
         temp_video.write(grid_out.read())
         temp_video.close()
 
         print("Video downloaded, starting audio extraction")
 
-        # Extract audio
         video = VideoFileClip(temp_video_path)
         audio = video.audio
 
@@ -29,19 +27,18 @@ def start(message, fs_videos, fs_mp3s, channel):
         audio.write_audiofile(
             temp_mp3_path,
             codec="mp3",
-            logger=None  # prevents hanging progress bar
+            logger=None  
         )
 
         video.close()
         audio.close()
 
-        print("🎵 Audio extracted")
+        print("Audio extracted")
 
-        # Save MP3 to GridFS
+    
         with open(temp_mp3_path, "rb") as f:
             mp3_fid = fs_mp3s.put(f.read(), filename="audio.mp3")
 
-        # Cleanup temp files
         os.remove(temp_video_path)
         os.remove(temp_mp3_path)
 
